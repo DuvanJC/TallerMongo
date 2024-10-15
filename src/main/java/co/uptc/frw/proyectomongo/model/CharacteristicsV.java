@@ -52,7 +52,7 @@ public class CharacteristicsV {
 
     @Override
     public String toString() {
-        return "Characteristics{" +
+        return "CharacteristicsV{" +
                 "id=" + id +
                 ", brand='" + brand + '\'' +
                 ", model='" + model + '\'' +

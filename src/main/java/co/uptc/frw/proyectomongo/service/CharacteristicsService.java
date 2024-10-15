@@ -6,10 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.concurrent.Callable;
+
 
 @Service
 public class CharacteristicsService {
-    @Autowired
+   @Autowired
     private CharacteristicsRepository characteristicsRepository;
 
     public List<CharacteristicsV> findAll() {
@@ -36,6 +38,6 @@ public class CharacteristicsService {
             characteristicsID.setLine (newCharacteristic.getLine());
             return characteristicsID;
         }
-        throw new RuntimeException("Characteristic not found");
+        throw new RuntimeException("Characteristics not found");
     }
 }

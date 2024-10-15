@@ -42,7 +42,6 @@ public class CharacteristicsController {
             CharacteristicsV updatedCharacteristics = characteristicsService.update(characteristicsV, id);
             return ResponseEntity.ok(updatedCharacteristics);  // 200 OK
         } catch (RuntimeException e) {
-            // Manejo de la excepción si no se encuentra la característica
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);  // 404 Not Found
         }
 
