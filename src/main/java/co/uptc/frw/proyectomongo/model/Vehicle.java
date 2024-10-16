@@ -1,6 +1,5 @@
 package co.uptc.frw.proyectomongo.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -82,7 +81,6 @@ public class Vehicle {
     public List<AdditionalOption> getAdditionalOptions() {
         return additionalOptions;
     }
-
     public void setAdditionalOptions(List<AdditionalOption> additionalOptions) {
         this.additionalOptions = additionalOptions;
     }

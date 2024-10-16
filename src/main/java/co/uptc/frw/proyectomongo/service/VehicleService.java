@@ -14,11 +14,8 @@ import java.util.Optional;
 public class VehicleService {
     @Autowired
     private VehicleRepository vehicleRepository;
-    
     @Autowired
     private AdditionalOptionRepository additionalOptionRepository;
-
-
     public List<Vehicle> findAll() {
         return vehicleRepository.findAll();
     }
@@ -27,10 +24,7 @@ public class VehicleService {
         return vehicleRepository.findById(id).orElse(null);
     }
 
-    public Vehicle saveVehicle(Vehicle vehicle) {
-
-        return vehicleRepository.save(vehicle);
-    }
+    public Vehicle saveVehicle(Vehicle vehicle) {  return vehicleRepository.save(vehicle); }
 
     public void deleteVehicle(long id) {
         vehicleRepository.deleteById(id);
@@ -47,7 +41,6 @@ public class VehicleService {
             return saveVehicle(vehicleId);
         }
         throw new RuntimeException("Vehicle not found");
-
     }
 
     public Vehicle agregarOpcion(Long vehiculoId, Long opcionAdicionalId) {
@@ -58,7 +51,7 @@ public class VehicleService {
             vehiculo.get().getAdditionalOptions().add(opcion.get());
             return vehicleRepository.save(vehiculo.get());
         }
-        return null; // Manejar los casos cuando no existan
+        return null;
     }
 
 }
