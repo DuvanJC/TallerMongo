@@ -34,4 +34,9 @@ public class VehicleController {
         return vehicleService.updateVehicle(vehicle, id);
     }
 
+    @PostMapping("/{vehiculoId}/AdditionalOptions/{opcionAdicionalId}")
+    public Vehicle agregarOpcion(@PathVariable Long vehiculoId, @PathVariable Long opcionAdicionalId) {
+        return vehicleService.agregarOpcion(vehiculoId, opcionAdicionalId);
+    }
+
 }

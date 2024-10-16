@@ -17,7 +17,7 @@ public class AdditionalOption {
     private String description;
     @Column(name = "PRECIO")
     private double price;
-    //@JsonIgnore
+    @JsonIgnore
     @ManyToMany(mappedBy = "additionalOptions")
     private List<Vehicle> vehicles;
     public AdditionalOption() {
