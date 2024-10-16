@@ -1,6 +1,9 @@
 package co.uptc.frw.proyectomongo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "CARACTERISTICAS")
@@ -14,6 +17,9 @@ public class CharacteristicsV {
     private String model;
     @Column(name = "LINEA")
     private String line;
+    @JsonIgnore
+    @OneToMany(mappedBy = "characteristics")
+    private List<Vehicle> vehicles;
 
     public CharacteristicsV() {
     }
@@ -48,6 +54,14 @@ public class CharacteristicsV {
 
     public void setLine(String line) {
         this.line = line;
+    }
+
+    public List<Vehicle> getVehicles() {
+        return vehicles;
+    }
+
+    public void setVehicles(List<Vehicle> vehicles) {
+        this.vehicles = vehicles;
     }
 
     @Override

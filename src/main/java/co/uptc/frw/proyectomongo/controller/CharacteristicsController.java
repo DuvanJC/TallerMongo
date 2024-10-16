@@ -37,13 +37,8 @@ public class CharacteristicsController {
     }
 
     @PutMapping
-    public ResponseEntity<CharacteristicsV>updateCharacteristics(@RequestBody CharacteristicsV characteristicsV, @RequestParam long id) {
-        try {
-            CharacteristicsV updatedCharacteristics = characteristicsService.update(characteristicsV, id);
-            return ResponseEntity.ok(updatedCharacteristics);  // 200 OK
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);  // 404 Not Found
-        }
+    public CharacteristicsV updateCharacteristics(@RequestBody CharacteristicsV characteristicsV, @RequestParam long id) {
+        return characteristicsService.update(characteristicsV, id);
 
     }
 }

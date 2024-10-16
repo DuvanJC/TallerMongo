@@ -36,7 +36,7 @@ public class CharacteristicsService {
             characteristicsID.setBrand(newCharacteristic.getBrand());
             characteristicsID.setModel (newCharacteristic.getModel());
             characteristicsID.setLine (newCharacteristic.getLine());
-            return characteristicsID;
+            return save(characteristicsID);
         }
         throw new RuntimeException("Characteristics not found");
     }
