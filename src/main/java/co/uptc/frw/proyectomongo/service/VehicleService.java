@@ -16,6 +16,9 @@ public class VehicleService {
     private VehicleRepository vehicleRepository;
     @Autowired
     private AdditionalOptionRepository additionalOptionRepository;
+    @Autowired
+    private AuditService auditService;
+
     public List<Vehicle> findAll() {
         return vehicleRepository.findAll();
     }
@@ -24,13 +27,21 @@ public class VehicleService {
         return vehicleRepository.findById(id).orElse(null);
     }
 
-    public Vehicle saveVehicle(Vehicle vehicle) {  return vehicleRepository.save(vehicle); }
-
-    public void deleteVehicle(long id) {
-        vehicleRepository.deleteById(id);
+    public Vehicle saveVehicle(Vehicle vehicle) {
+        Vehicle savedVehicle = vehicleRepository.save(vehicle);
+        auditService.logAudit("Vehicle", "Creado: " + savedVehicle.toString());
+        return savedVehicle;
     }
 
-    public Vehicle updateVehicle(Vehicle vehicle,long id) {
+    public void deleteVehicle(long id) {
+        Vehicle vehicleToDelete = findById(id);
+        if (vehicleToDelete != null) {
+            vehicleRepository.deleteById(id);
+            auditService.logAudit("Vehicle", "Borrado: ID " + id + ", Detalles: " + vehicleToDelete.toString());
+        }
+    }
+
+    public Vehicle updateVehicle(Vehicle vehicle, long id) {
         Vehicle vehicleId = findById(id);
         if (vehicleId != null) {
             vehicleId.setDisplacement(vehicle.getDisplacement());
@@ -38,7 +49,9 @@ public class VehicleService {
             vehicleId.setPrice(vehicle.getPrice());
             vehicleId.setCharacteristics(vehicle.getCharacteristics());
 
-            return saveVehicle(vehicleId);
+            Vehicle updatedVehicle = saveVehicle(vehicleId);
+            auditService.logAudit("Vehicle", "Modificado: " + updatedVehicle.toString());
+            return updatedVehicle;
         }
         throw new RuntimeException("Vehicle not found");
     }

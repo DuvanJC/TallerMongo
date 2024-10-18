@@ -12,6 +12,9 @@ public class AdditionalOptionService {
     @Autowired
     private AdditionalOptionRepository additionalOptionRepository;
 
+    @Autowired
+    private AuditService auditService;
+
     public List<AdditionalOption> finAll() {
         return additionalOptionRepository.findAll();
     }
@@ -19,21 +22,29 @@ public class AdditionalOptionService {
         return additionalOptionRepository.findById(id).orElse(null);
     }
 
-    public AdditionalOption saveAdditionalOption(AdditionalOption additionalOption){
-        return additionalOptionRepository.save(additionalOption);
+    public AdditionalOption saveAdditionalOption(AdditionalOption additionalOption) {
+        AdditionalOption savedOption = additionalOptionRepository.save(additionalOption);
+        auditService.logAudit("AdditionalOption", "Creado: " + savedOption.toString());
+        return savedOption;
     }
 
-    public void deleteAdditionalOption(long id){
-         additionalOptionRepository.deleteById(id);
+    public void deleteAdditionalOption(long id) {
+        AdditionalOption additionalOptionToDelete = finById(id);
+        if (additionalOptionToDelete != null) {
+            additionalOptionRepository.deleteById(id);
+            auditService.logAudit("AdditionalOption", "Eliminado: ID " + id + ", Detalles: " + additionalOptionToDelete.toString());
+        }
     }
 
-    public AdditionalOption updateAdditionalOption(AdditionalOption newAdditionalOption,long id){
+    public AdditionalOption updateAdditionalOption(AdditionalOption newAdditionalOption, long id) {
         AdditionalOption additionalOptionId = finById(id);
-        if(additionalOptionId != null){
+        if (additionalOptionId != null) {
             additionalOptionId.setName(newAdditionalOption.getName());
             additionalOptionId.setDescription(newAdditionalOption.getDescription());
             additionalOptionId.setPrice(newAdditionalOption.getPrice());
-            return saveAdditionalOption(additionalOptionId);
+            AdditionalOption updatedOption = saveAdditionalOption(additionalOptionId);
+            auditService.logAudit("AdditionalOption", "Modificado: " + updatedOption.toString());
+            return updatedOption;
         }
         throw new RuntimeException("Additional option not found");
     }
