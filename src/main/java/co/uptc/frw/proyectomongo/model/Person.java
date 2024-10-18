@@ -10,6 +10,8 @@ public class Person {
     public Person() {}
 
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "personas_seq")
+    @SequenceGenerator(name = "personas_seq", sequenceName = "personas_seq", allocationSize = 1)
     @Column(name = "ID_PERSONA")
     private long id;
     @Column(name = "NUMERO_DOCUMENTO")
@@ -18,7 +20,7 @@ public class Person {
     private String name;
     @Column(name = "TELEFONO")
     private String phoneNumber;
-    @Column(name = "DIRECICON")
+    @Column(name = "DIRECCION")
     private String address;
     @Column(name = "TIPO")
     private String type;

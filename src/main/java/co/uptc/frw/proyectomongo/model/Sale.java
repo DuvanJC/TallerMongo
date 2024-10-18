@@ -10,6 +10,8 @@ public class Sale {
     public Sale() {}
 
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ventas_seq")
+    @SequenceGenerator(name = "ventas_seq", sequenceName = "ventas_seq", allocationSize = 1)
     @Column(name = "ID_VENTA")
     private Long id;
 

@@ -38,5 +38,4 @@ public class VehicleController {
     public Vehicle agregarOpcion(@PathVariable Long vehiculoId, @PathVariable Long opcionAdicionalId) {
         return vehicleService.agregarOpcion(vehiculoId, opcionAdicionalId);
     }
-
 }

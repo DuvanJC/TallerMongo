@@ -8,7 +8,8 @@ import java.util.List;
 @Entity
 @Table(name = "OPCION_ADICIONAL")
 public class AdditionalOption {
-    @Id
+    @Id@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "opcion_adicional_seq")
+    @SequenceGenerator(name = "opcion_adicional_seq", sequenceName = "opcion_adicional_seq", allocationSize = 1)
     @Column(name = "ID_OP_ADICIONAL")
     private long id;
     @Column(name = "NOMBRE")

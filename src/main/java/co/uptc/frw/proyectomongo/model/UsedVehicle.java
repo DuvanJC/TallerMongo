@@ -10,6 +10,8 @@ public class UsedVehicle {
     public UsedVehicle() {}
 
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "vehiculo_usado_seq")
+    @SequenceGenerator(name = "vehiculo_usado_seq", sequenceName = "vehiculo_usado_seq", allocationSize = 1)
     @Column(name = "ID_VEHICULO_USADO")
     private Long id;
 
