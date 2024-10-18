@@ -1,5 +1,6 @@
 package co.uptc.frw.proyectomongo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -25,12 +26,15 @@ public class Person {
     @Column(name = "TIPO")
     private String type;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "seller")
     private List<Sale> sales;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "buyer")
     private List<Sale> buys;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "personTransfered")
     private List<UsedVehicle> usedVehicles;
 
