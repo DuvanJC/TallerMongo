@@ -15,7 +15,7 @@ public class Person {
     @SequenceGenerator(name = "personas_seq", sequenceName = "personas_seq", allocationSize = 1)
     @Column(name = "ID_PERSONA")
     private long id;
-    @Column(name = "NUMERO_DOCUMENTO")
+    @Column(name = "NUMERO_DOCUMENTO", nullable = false)
     private String documentId;
     @Column(name = "NOMBRE")
     private String name;

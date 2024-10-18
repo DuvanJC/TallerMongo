@@ -9,6 +9,7 @@ import java.util.List;
 
 @Service
 public class AdditionalOptionService {
+
     @Autowired
     private AdditionalOptionRepository additionalOptionRepository;
 
@@ -16,10 +17,16 @@ public class AdditionalOptionService {
     private AuditService auditService;
 
     public List<AdditionalOption> finAll() {
-        return additionalOptionRepository.findAll();
+        List<AdditionalOption> options = additionalOptionRepository.findAll();
+        auditService.logAudit("AdditionalOption", "Se consultaron todas las opciones adicionales");
+        return options;
     }
+
     public AdditionalOption finById(long id) {
-        return additionalOptionRepository.findById(id).orElse(null);
+        AdditionalOption option = additionalOptionRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Opción adicional con id " + id + " no encontrada"));
+        auditService.logAudit("AdditionalOption", "Se consultó la opción adicional con ID: " + id);
+        return option;
     }
 
     public AdditionalOption saveAdditionalOption(AdditionalOption additionalOption) {
@@ -30,22 +37,18 @@ public class AdditionalOptionService {
 
     public void deleteAdditionalOption(long id) {
         AdditionalOption additionalOptionToDelete = finById(id);
-        if (additionalOptionToDelete != null) {
-            additionalOptionRepository.deleteById(id);
-            auditService.logAudit("AdditionalOption", "Eliminado: ID " + id + ", Detalles: " + additionalOptionToDelete.toString());
-        }
+        additionalOptionRepository.deleteById(id);
+        auditService.logAudit("AdditionalOption", "Eliminado: ID " + id + ", Detalles: " + additionalOptionToDelete.toString());
     }
 
     public AdditionalOption updateAdditionalOption(AdditionalOption newAdditionalOption, long id) {
         AdditionalOption additionalOptionId = finById(id);
-        if (additionalOptionId != null) {
-            additionalOptionId.setName(newAdditionalOption.getName());
-            additionalOptionId.setDescription(newAdditionalOption.getDescription());
-            additionalOptionId.setPrice(newAdditionalOption.getPrice());
-            AdditionalOption updatedOption = saveAdditionalOption(additionalOptionId);
-            auditService.logAudit("AdditionalOption", "Modificado: " + updatedOption.toString());
-            return updatedOption;
-        }
-        throw new RuntimeException("Additional option not found");
+        additionalOptionId.setName(newAdditionalOption.getName());
+        additionalOptionId.setDescription(newAdditionalOption.getDescription());
+        additionalOptionId.setPrice(newAdditionalOption.getPrice());
+
+        AdditionalOption updatedOption = additionalOptionRepository.save(additionalOptionId);
+        auditService.logAudit("AdditionalOption", "Modificado: " + updatedOption.toString());
+        return updatedOption;
     }
 }

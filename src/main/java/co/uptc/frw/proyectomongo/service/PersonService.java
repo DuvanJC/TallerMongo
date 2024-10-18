@@ -13,28 +13,45 @@ public class PersonService {
     @Autowired
     private PersonRepository personRepository;
 
+    @Autowired
+    private AuditService auditService;
+
     public List<Person> findAllPersons() {
-        return personRepository.findAll();
+        List<Person> persons = personRepository.findAll();
+        auditService.logAudit("Person", "Se consultaron todas las personas");
+        return persons;
     }
 
     public Person findPersonById(long id) {
-        return personRepository.findById(id).orElse(null);
+        Person person = personRepository.findById(id).orElse(null);
+        auditService.logAudit("Person", "Se consultó la persona con ID: " + id);
+        return person;
     }
 
     public Person savePerson(Person person) {
-        return personRepository.save(person);
+        Person savedPerson = personRepository.save(person);
+        auditService.logAudit("Person", "Se creó la persona: " + savedPerson.toString());
+        return savedPerson;
     }
 
     public Person updatePerson(long id, Person person) {
-        Person personId = findPersonById(id);
-        if (personId != null) {
+        Person existingPerson = findPersonById(id);
+        if (existingPerson != null) {
             person.setId(id);
-            return personRepository.save(person);
+            Person updatedPerson = personRepository.save(person);
+            auditService.logAudit("Person", "Se actualizó la persona: " + updatedPerson.toString());
+            return updatedPerson;
         }
-        throw new RuntimeException("Person not found");
+        throw new RuntimeException("Persona no encontrada");
     }
 
     public void deletePerson(long id) {
-        personRepository.deleteById(id);
+        Person personToDelete = findPersonById(id);
+        if (personToDelete != null) {
+            personRepository.deleteById(id);
+            auditService.logAudit("Person", "Se eliminó la persona con ID: " + id);
+        } else {
+            throw new RuntimeException("Persona no encontrada");
+        }
     }
 }

@@ -1,13 +1,11 @@
 package co.uptc.frw.proyectomongo.service;
 
 import co.uptc.frw.proyectomongo.model.UsedVehicle;
-import co.uptc.frw.proyectomongo.model.Vehicle;
 import co.uptc.frw.proyectomongo.repository.UsedVehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UsedVehicleService {
@@ -15,28 +13,39 @@ public class UsedVehicleService {
     @Autowired
     private UsedVehicleRepository usedVehicleRepository;
 
+    @Autowired
+    private AuditService auditService;
+
     public List<UsedVehicle> findAllVehiculosUsados() {
-        return usedVehicleRepository.findAll();
+        List<UsedVehicle> vehiculosUsados = usedVehicleRepository.findAll();
+        auditService.logAudit("UsedVehicle", "Se consultaron todos los vehículos usados");
+        return vehiculosUsados;
     }
 
     public UsedVehicle findVehiculoUsadoById(Long id) {
-        return usedVehicleRepository.findById(id).orElse(null);
+        UsedVehicle vehiculoUsado = usedVehicleRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Vehículo usado con id " + id + " no encontrado"));
+        auditService.logAudit("UsedVehicle", "Se consultó el vehículo usado con ID: " + id);
+        return vehiculoUsado;
     }
 
     public UsedVehicle saveVehiculoUsado(UsedVehicle vehiculoUsado) {
-        return usedVehicleRepository.save(vehiculoUsado);
+        UsedVehicle vehiculoGuardado = usedVehicleRepository.save(vehiculoUsado);
+        auditService.logAudit("UsedVehicle", "Se creó el vehículo usado: " + vehiculoGuardado.toString());
+        return vehiculoGuardado;
     }
 
     public UsedVehicle updateVehiculoUsado(Long id, UsedVehicle vehiculoUsado) {
         UsedVehicle vehicleId = findVehiculoUsadoById(id);
-        if(vehicleId != null) {
-            vehiculoUsado.setId(id);
-            return usedVehicleRepository.save(vehiculoUsado);
-        }
-        throw new RuntimeException("Used Vehicle not found");
+        vehiculoUsado.setId(id); // Asigna el ID existente
+        UsedVehicle vehiculoActualizado = usedVehicleRepository.save(vehiculoUsado);
+        auditService.logAudit("UsedVehicle", "Se actualizó el vehículo usado: " + vehiculoActualizado.toString());
+        return vehiculoActualizado;
     }
 
     public void deleteVehiculoUsado(Long id) {
+        UsedVehicle vehiculoAEliminar = findVehiculoUsadoById(id);
         usedVehicleRepository.deleteById(id);
+        auditService.logAudit("UsedVehicle", "Se eliminó el vehículo usado con ID: " + id);
     }
 }

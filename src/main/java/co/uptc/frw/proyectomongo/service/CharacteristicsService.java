@@ -6,50 +6,49 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.concurrent.Callable;
-
 
 @Service
 public class CharacteristicsService {
-   @Autowired
+
+    @Autowired
     private CharacteristicsRepository characteristicsRepository;
 
     @Autowired
     private AuditService auditService;
 
     public List<CharacteristicsV> findAll() {
-        return characteristicsRepository.findAll();
+        List<CharacteristicsV> characteristicsList = characteristicsRepository.findAll();
+        auditService.logAudit("CharacteristicsV", "Se consultaron todas las características");
+        return characteristicsList;
     }
 
     public CharacteristicsV findById(long id) {
-        return characteristicsRepository.findById(id).orElse(null);
+        CharacteristicsV characteristics = characteristicsRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Característica con id " + id + " no encontrada"));
+        auditService.logAudit("CharacteristicsV", "Se consultó la característica con ID: " + id);
+        return characteristics;
     }
 
     public CharacteristicsV save(CharacteristicsV characteristicsV) {
-
         CharacteristicsV savedCharacteristics = characteristicsRepository.save(characteristicsV);
         auditService.logAudit("CharacteristicsV", "Creado: " + savedCharacteristics.toString());
-        return characteristicsRepository.save(characteristicsV);
+        return savedCharacteristics;
     }
 
     public void deleteCharacteristics(long id) {
         CharacteristicsV characteristicsToDelete = findById(id);
-        if (characteristicsToDelete != null) {
-            characteristicsRepository.deleteById(id);
-            auditService.logAudit("CharacteristicsV", "Borrado: ID " + id + ", Detalles: " + characteristicsToDelete.toString());
-        }
+        characteristicsRepository.deleteById(id);
+        auditService.logAudit("CharacteristicsV", "Borrado: ID " + id + ", Detalles: " + characteristicsToDelete.toString());
     }
 
-    public CharacteristicsV update(CharacteristicsV newCharacteristic,long id) {
+    public CharacteristicsV update(CharacteristicsV newCharacteristic, long id) {
         CharacteristicsV characteristicsID = findById(id);
-        if (characteristicsID != null) {
-            characteristicsID.setBrand(newCharacteristic.getBrand());
-            characteristicsID.setModel (newCharacteristic.getModel());
-            characteristicsID.setLine (newCharacteristic.getLine());
-            CharacteristicsV updatedCharacteristics = save(characteristicsID);
-            auditService.logAudit("CharacteristicsV", "Modificado: " + updatedCharacteristics.toString());
-            return save(characteristicsID);
-        }
-        throw new RuntimeException("Characteristics not found");
+        characteristicsID.setBrand(newCharacteristic.getBrand());
+        characteristicsID.setModel(newCharacteristic.getModel());
+        characteristicsID.setLine(newCharacteristic.getLine());
+
+        CharacteristicsV updatedCharacteristics = save(characteristicsID);
+        auditService.logAudit("CharacteristicsV", "Modificado: " + updatedCharacteristics.toString());
+        return updatedCharacteristics;
     }
 }

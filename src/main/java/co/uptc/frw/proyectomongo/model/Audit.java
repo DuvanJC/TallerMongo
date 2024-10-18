@@ -8,14 +8,12 @@ import java.util.Date;
 @Document(collection = "auditoria")
 public class Audit {
     @Id
-    private String id; // El ID de la auditoría
-    private String entity; // Nombre de la entidad que se audita
-    private Date auditDate; // Fecha de la auditoría
-    private String description; // Descripción de la auditoría
+    private String id;
+    private String entity;
+    private Date auditDate;
+    private String description;
 
     public Audit() {}
-
-    // Getters y Setters
 
     public String getId() {
         return id;
