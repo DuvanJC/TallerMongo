@@ -17,38 +17,63 @@ public class CharacteristicsService {
     private AuditService auditService;
 
     public List<CharacteristicsV> findAll() {
-        List<CharacteristicsV> characteristicsList = characteristicsRepository.findAll();
-        auditService.logAudit("CharacteristicsV", "Se consultaron todas las características");
-        return characteristicsList;
+        try {
+            List<CharacteristicsV> characteristicsList = characteristicsRepository.findAll();
+            auditService.logAudit("CharacteristicsV", "Se consultaron todas las características");
+            return characteristicsList;
+        } catch (Exception e) {
+            auditService.logAudit("CharacteristicsV", "Error al consultar todas las características: " + e.getMessage());
+            throw e;
+        }
     }
 
     public CharacteristicsV findById(long id) {
-        CharacteristicsV characteristics = characteristicsRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Característica con id " + id + " no encontrada"));
-        auditService.logAudit("CharacteristicsV", "Se consultó la característica con ID: " + id);
-        return characteristics;
+        try {
+            CharacteristicsV characteristics = characteristicsRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Característica con id " + id + " no encontrada"));
+            auditService.logAudit("CharacteristicsV", "Se consultó la característica con ID: " + id);
+            return characteristics;
+        } catch (Exception e) {
+            auditService.logAudit("CharacteristicsV", "Error al consultar la característica con ID " + id + ": " + e.getMessage());
+            throw e;
+        }
     }
 
     public CharacteristicsV save(CharacteristicsV characteristicsV) {
-        CharacteristicsV savedCharacteristics = characteristicsRepository.save(characteristicsV);
-        auditService.logAudit("CharacteristicsV", "Creado: " + savedCharacteristics.toString());
-        return savedCharacteristics;
+        try {
+            CharacteristicsV savedCharacteristics = characteristicsRepository.save(characteristicsV);
+            auditService.logAudit("CharacteristicsV", "Creado: " + savedCharacteristics.toString());
+            return savedCharacteristics;
+        } catch (Exception e) {
+            auditService.logAudit("CharacteristicsV", "Error al crear la característica: " + e.getMessage());
+            throw e;
+        }
     }
 
     public void deleteCharacteristics(long id) {
-        CharacteristicsV characteristicsToDelete = findById(id);
-        characteristicsRepository.deleteById(id);
-        auditService.logAudit("CharacteristicsV", "Borrado: ID " + id + ", Detalles: " + characteristicsToDelete.toString());
+        try {
+            CharacteristicsV characteristicsToDelete = findById(id);
+            characteristicsRepository.deleteById(id);
+            auditService.logAudit("CharacteristicsV", "Borrado: ID " + id + ", Detalles: " + characteristicsToDelete.toString());
+        } catch (Exception e) {
+            auditService.logAudit("CharacteristicsV", "Error al borrar la característica con ID " + id + ": " + e.getMessage());
+            throw e;
+        }
     }
 
     public CharacteristicsV update(CharacteristicsV newCharacteristic, long id) {
-        CharacteristicsV characteristicsID = findById(id);
-        characteristicsID.setBrand(newCharacteristic.getBrand());
-        characteristicsID.setModel(newCharacteristic.getModel());
-        characteristicsID.setLine(newCharacteristic.getLine());
+        try {
+            CharacteristicsV characteristicsID = findById(id);
+            characteristicsID.setBrand(newCharacteristic.getBrand());
+            characteristicsID.setModel(newCharacteristic.getModel());
+            characteristicsID.setLine(newCharacteristic.getLine());
 
-        CharacteristicsV updatedCharacteristics = save(characteristicsID);
-        auditService.logAudit("CharacteristicsV", "Modificado: " + updatedCharacteristics.toString());
-        return updatedCharacteristics;
+            CharacteristicsV updatedCharacteristics = save(characteristicsID);
+            auditService.logAudit("CharacteristicsV", "Modificado: " + updatedCharacteristics.toString());
+            return updatedCharacteristics;
+        } catch (Exception e) {
+            auditService.logAudit("CharacteristicsV", "Error al modificar la característica con ID " + id + ": " + e.getMessage());
+            throw e;
+        }
     }
 }
